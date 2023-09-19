@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\frontendweek3.props" />
+</Project>

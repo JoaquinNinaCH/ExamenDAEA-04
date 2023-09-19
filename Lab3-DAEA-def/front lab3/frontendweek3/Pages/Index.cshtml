@@ -1,0 +1,109 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de API</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #apiForm {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #results {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta de API</h1>
+    
+    <form id="apiForm">
+        <label for="query">Consulta API:</label>
+        <input type="text" id="query" name="query" required>
+        <button type="submit">Enviar</button>
+    </form>
+    
+    <div id="results"></div>
+    
+    <script>
+        document.getElementById('apiForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const query = document.getElementById('query').value;
+            const apiUrl = 'http://localhost:5184/api/';
+
+            // Realizar la solicitud a la API
+            fetch(apiUrl + query)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = '<h2>Resultados:</h2>';
+                    
+                    // Iterar a través de los resultados y mostrar las URLs
+                    for (let i = 0; i < Math.min(data.results.length, 1); i++) {
+                        const url = data.results[i].media_formats.gif.url;
+                        
+                        // Crear una etiqueta de imagen para mostrar la URL
+                        const imageElement = document.createElement('img');
+                        imageElement.src = url;
+
+                        // Agregar la imagen al div de resultados
+                        resultsDiv.appendChild(imageElement);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al consultar la API:', error);
+                });
+        });
+    </script>
+</body>
+</html>
